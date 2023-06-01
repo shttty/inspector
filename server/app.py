@@ -118,18 +118,9 @@ def processLog():
         # 获取前端传递的代理目标 URL，例如 https://example.com/
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
-    url = Node[hostName].address + "tail.html?processname=" + processName
-    
-    response = requests.get(url, verify=False)
-    # 将响应内容和响应头返回给客户端
-    html = response.content
-
-    # 使用 BeautifulSoup 解析 HTML 页面
-    soup = BeautifulSoup(html, 'html.parser')
-    # 获取指定标签的内容
-    tag = soup.find('pre')
-    content = "<pre>"+tag.text+"</pre>"
-    # return Response(response.content, headers=dict(response.headers))
+    log=Node[hostName].connection.supervisor.tailProcessStdoutLog(processName,0,10000) 
+    content = "<pre>"+log[0]+"</pre>"
+    print(content)
     return content
 
 @app.route('/start',methods=['GET'])
