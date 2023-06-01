@@ -1,0 +1,93 @@
+[2023-05-31 10:05:19 +0800] [1399593] [INFO] Starting gunicorn 20.1.0
+[2023-05-31 10:05:19 +0800] [1399593] [INFO] Listening at: http://127.0.0.1:5000 (1399593)
+[2023-05-31 10:05:19 +0800] [1399593] [INFO] Using worker: gevent
+[2023-05-31 10:05:19 +0800] [1399594] [INFO] Booting worker with pid: 1399594
+[2023-05-31 10:05:19 +0800] [1399598] [INFO] Booting worker with pid: 1399598
+[2023-05-31 10:05:19 +0800] [1399599] [INFO] Booting worker with pid: 1399599
+[2023-05-31 10:05:19 +0800] [1399600] [INFO] Booting worker with pid: 1399600
+[2023-05-31 10:05:19 +0800] [1399601] [INFO] Booting worker with pid: 1399601
+[2023-05-31 10:05:19 +0800] [1399602] [INFO] Booting worker with pid: 1399602
+[2023-05-31 10:05:19 +0800] [1399603] [INFO] Booting worker with pid: 1399603
+[2023-05-31 10:05:19 +0800] [1399604] [INFO] Booting worker with pid: 1399604
+[2023-05-31 10:05:19 +0800] [1399605] [INFO] Booting worker with pid: 1399605
+[2023-05-31 10:05:19 +0800] [1399606] [INFO] Booting worker with pid: 1399606
+[2023-05-31 10:05:19 +0800] [1399608] [INFO] Booting worker with pid: 1399608
+[2023-05-31 10:05:19 +0800] [1399612] [INFO] Booting worker with pid: 1399612
+[2023-05-31 10:05:19 +0800] [1399613] [INFO] Booting worker with pid: 1399613
+[2023-05-31 10:05:55 +0800] [1399593] [INFO] Handling signal: int
+[2023-05-31 10:05:55 +0800] [1399599] [INFO] Worker exiting (pid: 1399599)
+[2023-05-31 10:05:55 +0800] [1399602] [INFO] Worker exiting (pid: 1399602)
+[2023-05-31 10:05:55 +0800] [1399605] [INFO] Worker exiting (pid: 1399605)
+[2023-05-31 10:05:55 +0800] [1399608] [INFO] Worker exiting (pid: 1399608)
+[2023-05-31 10:05:55 +0800] [1399612] [INFO] Worker exiting (pid: 1399612)
+[2023-05-31 10:05:55 +0800] [1399594] [INFO] Worker exiting (pid: 1399594)
+[2023-05-31 10:05:55 +0800] [1399601] [INFO] Worker exiting (pid: 1399601)
+[2023-05-31 10:05:55 +0800] [1399603] [INFO] Worker exiting (pid: 1399603)
+[2023-05-31 10:05:55 +0800] [1399600] [INFO] Worker exiting (pid: 1399600)
+[2023-05-31 10:05:55 +0800] [1399606] [INFO] Worker exiting (pid: 1399606)
+[2023-05-31 10:05:55 +0800] [1399604] [INFO] Worker exiting (pid: 1399604)
+[2023-05-31 10:05:55 +0800] [1399598] [INFO] Worker exiting (pid: 1399598)
+[2023-05-31 10:05:55 +0800] [1399613] [INFO] Worker exiting (pid: 1399613)
+[2023-05-31 10:05:55 +0800] [1399593] [INFO] Shutting down: Master
+[2023-05-31 10:07:45 +0800] [1399802] [INFO] Starting gunicorn 20.1.0
+[2023-05-31 10:07:45 +0800] [1399802] [INFO] Listening at: http://0.0.0.0:5000 (1399802)
+[2023-05-31 10:07:45 +0800] [1399802] [INFO] Using worker: gevent
+[2023-05-31 10:07:45 +0800] [1399803] [INFO] Booting worker with pid: 1399803
+[2023-05-31 10:07:45 +0800] [1399807] [INFO] Booting worker with pid: 1399807
+[2023-05-31 10:07:45 +0800] [1399808] [INFO] Booting worker with pid: 1399808
+[2023-05-31 10:07:46 +0800] [1399809] [INFO] Booting worker with pid: 1399809
+[2023-05-31 10:07:46 +0800] [1399810] [INFO] Booting worker with pid: 1399810
+[2023-05-31 10:07:46 +0800] [1399811] [INFO] Booting worker with pid: 1399811
+[2023-05-31 10:07:46 +0800] [1399812] [INFO] Booting worker with pid: 1399812
+[2023-05-31 10:07:46 +0800] [1399813] [INFO] Booting worker with pid: 1399813
+[2023-05-31 10:07:46 +0800] [1399814] [INFO] Booting worker with pid: 1399814
+[2023-05-31 10:07:46 +0800] [1399815] [INFO] Booting worker with pid: 1399815
+[2023-05-31 10:07:46 +0800] [1399816] [INFO] Booting worker with pid: 1399816
+[2023-05-31 10:07:46 +0800] [1399817] [INFO] Booting worker with pid: 1399817
+[2023-05-31 10:07:46 +0800] [1399818] [INFO] Booting worker with pid: 1399818
+[2023-05-31 10:07:51 +0800] [1399802] [INFO] Handling signal: int
+[2023-05-31 10:07:51 +0800] [1399816] [INFO] Worker exiting (pid: 1399816)
+[2023-05-31 10:07:51 +0800] [1399817] [INFO] Worker exiting (pid: 1399817)
+[2023-05-31 10:07:52 +0800] [1399803] [INFO] Worker exiting (pid: 1399803)
+[2023-05-31 10:07:52 +0800] [1399808] [INFO] Worker exiting (pid: 1399808)
+[2023-05-31 10:07:52 +0800] [1399811] [INFO] Worker exiting (pid: 1399811)
+[2023-05-31 10:07:52 +0800] [1399810] [INFO] Worker exiting (pid: 1399810)
+[2023-05-31 10:07:52 +0800] [1399813] [INFO] Worker exiting (pid: 1399813)
+[2023-05-31 10:07:52 +0800] [1399807] [INFO] Worker exiting (pid: 1399807)
+[2023-05-31 10:07:52 +0800] [1399818] [INFO] Worker exiting (pid: 1399818)
+[2023-05-31 10:07:52 +0800] [1399809] [INFO] Worker exiting (pid: 1399809)
+[2023-05-31 10:07:52 +0800] [1399815] [INFO] Worker exiting (pid: 1399815)
+[2023-05-31 10:07:52 +0800] [1399814] [INFO] Worker exiting (pid: 1399814)
+[2023-05-31 10:07:52 +0800] [1399812] [INFO] Worker exiting (pid: 1399812)
+[2023-05-31 10:07:52 +0800] [1399802] [INFO] Shutting down: Master
+[2023-05-31 10:25:07 +0800] [1401150] [INFO] Starting gunicorn 20.1.0
+[2023-05-31 10:25:07 +0800] [1401150] [INFO] Listening at: http://0.0.0.0:5000 (1401150)
+[2023-05-31 10:25:07 +0800] [1401150] [INFO] Using worker: gevent
+[2023-05-31 10:25:07 +0800] [1401155] [INFO] Booting worker with pid: 1401155
+[2023-05-31 10:25:07 +0800] [1401156] [INFO] Booting worker with pid: 1401156
+[2023-05-31 10:25:07 +0800] [1401157] [INFO] Booting worker with pid: 1401157
+[2023-05-31 10:25:07 +0800] [1401158] [INFO] Booting worker with pid: 1401158
+[2023-05-31 10:25:07 +0800] [1401159] [INFO] Booting worker with pid: 1401159
+[2023-05-31 10:25:07 +0800] [1401160] [INFO] Booting worker with pid: 1401160
+[2023-05-31 10:25:08 +0800] [1401161] [INFO] Booting worker with pid: 1401161
+[2023-05-31 10:25:08 +0800] [1401162] [INFO] Booting worker with pid: 1401162
+[2023-05-31 10:25:08 +0800] [1401164] [INFO] Booting worker with pid: 1401164
+[2023-05-31 10:25:08 +0800] [1401165] [INFO] Booting worker with pid: 1401165
+[2023-05-31 10:25:08 +0800] [1401170] [INFO] Booting worker with pid: 1401170
+[2023-05-31 10:25:08 +0800] [1401173] [INFO] Booting worker with pid: 1401173
+[2023-05-31 10:25:08 +0800] [1401174] [INFO] Booting worker with pid: 1401174
+[2023-05-31 10:25:17 +0800] [1401150] [INFO] Handling signal: int
+[2023-05-31 10:25:18 +0800] [1401155] [INFO] Worker exiting (pid: 1401155)
+[2023-05-31 10:25:18 +0800] [1401160] [INFO] Worker exiting (pid: 1401160)
+[2023-05-31 10:25:18 +0800] [1401165] [INFO] Worker exiting (pid: 1401165)
+[2023-05-31 10:25:18 +0800] [1401156] [INFO] Worker exiting (pid: 1401156)
+[2023-05-31 10:25:18 +0800] [1401158] [INFO] Worker exiting (pid: 1401158)
+[2023-05-31 10:25:18 +0800] [1401170] [INFO] Worker exiting (pid: 1401170)
+[2023-05-31 10:25:18 +0800] [1401164] [INFO] Worker exiting (pid: 1401164)
+[2023-05-31 10:25:18 +0800] [1401162] [INFO] Worker exiting (pid: 1401162)
+[2023-05-31 10:25:18 +0800] [1401159] [INFO] Worker exiting (pid: 1401159)
+[2023-05-31 10:25:18 +0800] [1401174] [INFO] Worker exiting (pid: 1401174)
+[2023-05-31 10:25:18 +0800] [1401157] [INFO] Worker exiting (pid: 1401157)
+[2023-05-31 10:25:18 +0800] [1401173] [INFO] Worker exiting (pid: 1401173)
+[2023-05-31 10:25:18 +0800] [1401161] [INFO] Worker exiting (pid: 1401161)
+[2023-05-31 10:25:18 +0800] [1401150] [INFO] Shutting down: Master
