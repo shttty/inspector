@@ -1,7 +1,7 @@
 <template>
   <el-container class="layout-container-demo" style="height: 100%">
     <el-header style="text-align: center; font-size: 12px">
-      <h1>Header</h1>
+      <h1>进程管理中心</h1>
     </el-header>
     <el-container>
       <el-aside width="200px">
@@ -22,48 +22,57 @@
               <el-card v-for="server in serverListOK" :key="server.id" class="box-card" shadow="hover">
                 <template #header>
                   <div class="card-header">
-                    <!-- <span>{{ server.hostName }}</span> -->
-                    <el-link href="https://element-plus.org" target="_blank" style="font-size: 18px">{{ server.hostName }}</el-link>
+                    <el-text class="mx-1" style="font-size: 24px">{{ server.hostName }}</el-text>
                   </div>
                 </template>
                 <el-scrollbar>
-                  <!-- <el-row v-for="process in processRunning" :key="process.id" justify="left" :span="6"><el-link :underline="false"
-                type="success">{{ process.name }}</el-link></el-row>
-                <el-row v-for="process in processStopped" :key="process.id" justify="left" :span="6"><el-link :underline="false"
-                type="warrning">{{ process.name }}</el-link></el-row>
-                <el-row v-for="process in processErr" :key="process.id" justify="left" :span="6"><el-link :underline="false"
-                type="danger">{{ process.name }}</el-link></el-row> -->
-                  <el-row>
-                    <el-col :span="8"><el-link :underline="false" type="success">running</el-link> </el-col>
-                    <el-col :span="6"> <span style="font-size: 18px; color: grey;">{{ uptime }}</span> </el-col>
-                    <el-col :span="3"><el-link type="info" style="font-size: 18px">restart</el-link></el-col>
-                    <el-col :span="3"><el-link type="info" style="font-size: 18px">stop</el-link></el-col>
-                    <el-col :span="3"><el-link type="info" style="font-size: 18px">log</el-link></el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="8"><el-link :underline="false" type="warning">stopped</el-link></el-col>
-                    <el-col :span="6"> <span style="font-size: 18px; color: grey;">{{ stopTime }}</span> </el-col>
-                    <el-col :span="6"><el-link type="info" style="font-size: 18px"> start </el-link></el-col>
-                    <el-col :span="3"><el-link type="info" style="font-size: 18px"> log </el-link></el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="8"><el-link :underline="false" type="danger">exitederr</el-link></el-col>
-                    <el-col :span="6"> <span style="font-size: 18px; color: grey;">{{ stopTime }}</span> </el-col>
-                    <el-col :span="6"><el-link type="info" style="font-size: 18px"> start </el-link></el-col>
-                    <el-col :span="3"><el-link type="info" style="font-size: 18px"> log </el-link></el-col>
-                  </el-row>
+                  <div v-for="runningProcess in processListRunning" :key="runningProcess.id">
+                    <el-row v-if="runningProcess.hostName == server.hostName">
+                      <el-col :span="8"><el-link :underline="false" type="success">{{ runningProcess.processName
+                      }}</el-link> </el-col>
+                      <el-col :span="6"> <span style="font-size: 16px; color: grey;">{{ runningProcess.processState
+                      }}<br>{{ runningProcess.uptime }}</span> </el-col>
+                      <el-col :span="6"><el-button  size="small" type='danger' text='danger' style="font-size: 18px" @click="stopClick(runningProcess)">stop</el-button></el-col>
+                      <el-col :span="3"><el-link
+                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(runningProcess.hostName) + '&processname=' + encodeURIComponent(runningProcess.processName)"
+                          target="_blank" type="info" style="font-size: 18px">log</el-link></el-col>
+                    </el-row>
+                  </div>
+                  <div v-for="startingProcess in processListStarting" :key="startingProcess.id">
+                    <el-row v-if="startingProcess.hostName == server.hostName">
+                      <el-col :span="8"><el-link :underline="false" type="warning">{{ startingProcess.processName
+                      }}</el-link> </el-col>
+                      <el-col :span="6"> <span style="font-size: 16px; color: grey;">{{ startingProcess.processState
+                      }}<br>{{ startingProcess.starttime }}</span> </el-col>
+                      <el-col :span="6"><el-button  size="small" type='danger' text='danger' style="font-size: 18px" @click="stopClick(startingProcess)">stop</el-button></el-col>
+                      <el-col :span="3"><el-link
+                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(startingProcess.hostName) + '&processname=' + encodeURIComponent(startingProcess.processName)"
+                          target="_blank" type="info" style="font-size: 18px">log</el-link></el-col>
+                    </el-row>
+                  </div>
+                  <div v-for="stoppedProcess in processListStopped" :key="stoppedProcess.id">
+                    <el-row v-if="stoppedProcess.hostName == server.hostName">
+                      <el-col :span="8"><el-link :underline="false" type="danger">{{ stoppedProcess.processName
+                      }}</el-link></el-col>
+                      <el-col :span="6"> <span style="font-size: 18px; color: grey;">{{ stoppedProcess.processState
+                      }}<br>{{
+  stoppedProcess.stoptime }}</span> </el-col>
+                      <el-col :span="6"><el-button type='primary' text='primary' size="small" style="font-size: 18px"  
+                          @click="startClick(stoppedProcess)"> start </el-button></el-col>
+                      <el-col :span="3"><el-link type="info" style="font-size: 18px"
+                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(stoppedProcess.hostName) + '&processname=' + encodeURIComponent(stoppedProcess.processName)"
+                          target="_blank"> log </el-link></el-col>
+                    </el-row>
+                  </div>
                 </el-scrollbar>
               </el-card>
             </el-space>
           </div>
         </el-main>
-        <!-- <el-footer><el-row justify="center"> <el-pagination background layout="prev, pager, next" :total="100"
-              :hide-on-single-page="true" /></el-row></el-footer> -->
       </el-container>
     </el-container>
   </el-container>
 </template>
-
 
 <style scoped>
 .card-header {
@@ -116,9 +125,11 @@
   margin-bottom: 0;
 }
 </style>
-
 <script lang="ts" >
+
 import { defineComponent, ref, onMounted } from 'vue';
+
+
 
 interface ServerList {
   AllNodes: any;
@@ -126,35 +137,125 @@ interface ServerList {
   ConnectFailled: string[];
 }
 
+interface process {
+  name: string;
+  group: string;
+  start: number;
+  stop: number;
+  now: number;
+  state: number;
+  statename: string;
+  spawnerr: string;
+  exitstatus: number;
+  logfile: string;
+  stdout_logfile: string;
+  stderr_logfile: string;
+  pid: number;
+  description: string;
+}
+interface Servers {
+  [key: string]: process[];
+}
+
+function convertTime(unixTimestamp: number): string {
+  if (unixTimestamp === 0) {
+    return " ";
+  }
+  const date = new Date(unixTimestamp * 1000);
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2);
+  const day = ('0' + date.getDate()).slice(-2);
+  const hours = ('0' + date.getHours()).slice(-2);
+  const minutes = ('0' + date.getMinutes()).slice(-2);
+  const seconds = ('0' + date.getSeconds()).slice(-2);
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 export default defineComponent({
   name: 'MyComponent',
   setup() {
     const serverListOK = ref<{ id: number; hostName: string }[]>([]);
     const serverListNO = ref<{ id: number; hostName: string }[]>([]);
+    const processListRunning = ref<{ id: number; hostName: string; uptime: string; processName: string; processState: string }[]>([]);
+    const processListStarting = ref<{ id: number; hostName: string; starttime: string; processName: string; processState: string }[]>([]);
+    const processListStopped = ref<{ id: number; hostName: string; stoptime: string; processName: string; processState: string }[]>([]);
 
-    onMounted(() => {
-      fetch('http://127.0.0.1:5000/serverList')
+    const startClick = async (item: { hostName: string, processName: string }) => {
+      const url = `http://10.1.11.66:5000/start?servername=${item.hostName}&processname=${item.processName}`;
+      await fetch(url);
+      await new Promise((resolve) => setTimeout(resolve, 0)); // 等待异步操作完成
+      location.reload();
+      console.log("ok")
+    };
+
+    const stopClick = async (item: { hostName: string, processName: string }) => {
+      const url = `http://10.1.11.66:5000/stop?servername=${item.hostName}&processname=${item.processName}`;
+      await fetch(url);
+      await new Promise((resolve) => setTimeout(resolve, 0)); // 等待异步操作完成
+      location.reload();
+      console.log("ok")
+    };
+
+    async function getServerList() {
+      await fetch('http://10.1.11.66:5000/serverList')
         .then(response => response.json())
         .then((data: ServerList) => {
           let id = 0;
           for (let i of data.ConnecctSucceed) {
             serverListOK.value.push({ id: id++, hostName: i });
-            console.log(serverListOK.value);
           }
           let idf = 0;
           for (let i of data.ConnectFailled) {
             serverListNO.value.push({ id: idf++, hostName: i });
-            console.log(serverListNO.value);
           }
         })
         .catch(error => {
           console.error('Error:', error);
         });
+    }
+    async function getProcessList() {
+      await fetch('http://10.1.11.66:5000/processList/all/')
+        .then(response => response.json())
+        .then((data: Servers) => {
+          let id = 0;
+          console.log(data);
+          const serverNames = Object.keys(data);
+          console.log(serverNames);
+          console.log(serverNames[0]);
+          for (let i in serverNames) {
+            console.log("test2")
+            for (let a in data[serverNames[i]]) {
+              if (data[serverNames[i]][a].state == 20) {
+                processListRunning.value.push({ id: id++, hostName: serverNames[i], uptime: convertTime(data[serverNames[i]][a].start), processName: data[serverNames[i]][a].name, processState: data[serverNames[i]][a].statename });
+                console.log(a)
+              }
+              else if (data[serverNames[i]][a].state == 10) {
+                processListStarting.value.push({ id: id++, hostName: serverNames[i], starttime: convertTime(data[serverNames[i]][a].start), processName: data[serverNames[i]][a].name, processState: data[serverNames[i]][a].statename });
+              } else {
+                processListStopped.value.push({ id: id++, hostName: serverNames[i], stoptime: convertTime(data[serverNames[i]][a].stop), processName: data[serverNames[i]][a].name, processState: data[serverNames[i]][a].statename });
+              }
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    async function test() {
+      await getServerList()
+      await getProcessList()
+    }
+    onMounted(() => {
+      test()
     });
-
     return {
       serverListOK,
-      serverListNO
+      serverListNO,
+      processListRunning,
+      processListStopped,
+      processListStarting,
+      startClick,
+      stopClick
     };
   }
 });
