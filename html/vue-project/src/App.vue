@@ -34,7 +34,7 @@
                       }}<br>{{ runningProcess.uptime }}</span> </el-col>
                       <el-col :span="6"><el-button  size="small" type='danger' text='danger' style="font-size: 18px" @click="stopClick(runningProcess)">stop</el-button></el-col>
                       <el-col :span="3"><el-link
-                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(runningProcess.hostName) + '&processname=' + encodeURIComponent(runningProcess.processName)"
+                          :href="'http://localhost:5000/log?servername=' + encodeURIComponent(runningProcess.hostName) + '&processname=' + encodeURIComponent(runningProcess.processName)"
                           target="_blank" type="info" style="font-size: 18px">log</el-link></el-col>
                     </el-row>
                   </div>
@@ -46,7 +46,7 @@
                       }}<br>{{ startingProcess.starttime }}</span> </el-col>
                       <el-col :span="6"><el-button  size="small" type='danger' text='danger' style="font-size: 18px" @click="stopClick(startingProcess)">stop</el-button></el-col>
                       <el-col :span="3"><el-link
-                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(startingProcess.hostName) + '&processname=' + encodeURIComponent(startingProcess.processName)"
+                          :href="'http://localhost:5000/log?servername=' + encodeURIComponent(startingProcess.hostName) + '&processname=' + encodeURIComponent(startingProcess.processName)"
                           target="_blank" type="info" style="font-size: 18px">log</el-link></el-col>
                     </el-row>
                   </div>
@@ -60,7 +60,7 @@
                       <el-col :span="6"><el-button type='primary' text='primary' size="small" style="font-size: 18px"  
                           @click="startClick(stoppedProcess)"> start </el-button></el-col>
                       <el-col :span="3"><el-link type="info" style="font-size: 18px"
-                          :href="'http://10.1.11.66:5000/log?servername=' + encodeURIComponent(stoppedProcess.hostName) + '&processname=' + encodeURIComponent(stoppedProcess.processName)"
+                          :href="'http://localhost:5000/log?servername=' + encodeURIComponent(stoppedProcess.hostName) + '&processname=' + encodeURIComponent(stoppedProcess.processName)"
                           target="_blank"> log </el-link></el-col>
                     </el-row>
                   </div>
@@ -161,13 +161,15 @@ function convertTime(unixTimestamp: number): string {
   if (unixTimestamp === 0) {
     return " ";
   }
+
   const date = new Date(unixTimestamp * 1000);
   const year = date.getFullYear();
-  const month = ('0' + (date.getMonth() + 1)).slice(-2);
-  const day = ('0' + date.getDate()).slice(-2);
-  const hours = ('0' + date.getHours()).slice(-2);
-  const minutes = ('0' + date.getMinutes()).slice(-2);
-  const seconds = ('0' + date.getSeconds()).slice(-2);
+  const month = ('0' + (date.getMonth() + 1)).padStart(2, '0');
+  const day = ('0' + date.getDate()).padStart(2, '0');
+  const hours = ('0' + date.getHours()).padStart(2, '0');
+  const minutes = ('0' + date.getMinutes()).padStart(2, '0');
+  const seconds = ('0' + date.getSeconds()).padStart(2, '0');
+
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
@@ -181,7 +183,7 @@ export default defineComponent({
     const processListStopped = ref<{ id: number; hostName: string; stoptime: string; processName: string; processState: string }[]>([]);
 
     const startClick = async (item: { hostName: string, processName: string }) => {
-      const url = `http://10.1.11.66:5000/start?servername=${item.hostName}&processname=${item.processName}`;
+      const url = `http://localhost:5000/start?servername=${item.hostName}&processname=${item.processName}`;
       await fetch(url);
       await new Promise((resolve) => setTimeout(resolve, 0)); // 等待异步操作完成
       location.reload();
@@ -189,7 +191,7 @@ export default defineComponent({
     };
 
     const stopClick = async (item: { hostName: string, processName: string }) => {
-      const url = `http://10.1.11.66:5000/stop?servername=${item.hostName}&processname=${item.processName}`;
+      const url = `http://localhost:5000/stop?servername=${item.hostName}&processname=${item.processName}`;
       await fetch(url);
       await new Promise((resolve) => setTimeout(resolve, 0)); // 等待异步操作完成
       location.reload();
@@ -197,7 +199,7 @@ export default defineComponent({
     };
 
     async function getServerList() {
-      await fetch('http://10.1.11.66:5000/serverList')
+      await fetch('http://localhost:5000/serverList')
         .then(response => response.json())
         .then((data: ServerList) => {
           let id = 0;
@@ -214,7 +216,7 @@ export default defineComponent({
         });
     }
     async function getProcessList() {
-      await fetch('http://10.1.11.66:5000/processList/all/')
+      await fetch('http://localhost:5000/processList/all/')
         .then(response => response.json())
         .then((data: Servers) => {
           let id = 0;
