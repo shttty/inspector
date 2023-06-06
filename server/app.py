@@ -105,8 +105,6 @@ def serverList():
 @app.route('/processList/all/',methods=['GET'])
 @cross_origin()
 def processList():
-    # serverName = input("Which server you want to see? Input servername or all to see all server .\n")
-    # processState = input("What kind of process do you want to see? Input running or stopped.\n")
     result={}
     for i in Node:
         result[i]=Node[i].listProcess("all")
@@ -119,8 +117,7 @@ def processLog():
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     log=Node[hostName].connection.supervisor.tailProcessStdoutLog(processName,0,10000) 
-    content = "<pre>"+log[0]+"</pre>"
-    print(content)
+    content ={ "text":log[0]}
     return content
 
 @app.route('/start',methods=['GET'])
@@ -128,38 +125,22 @@ def processLog():
 def startProcess():
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
-    flag =  Node[hostName].connection.supervisor.startProcess(processName)
-    if flag:
-        return "True"
-    else:
-        return "False"
-@app.route('/restart',methods=['GET'])
-@cross_origin()
-def restartProcess():
-    hostName = request.args.get("servername")
-    processName = request.args.get("processname")
-    flag = Node[hostName].connection.supervisor.stopProcess(processName)
-    if flag:
-        return "True"
-    else:
-        return "Fales"
+    Node[hostName].connection.supervisor.startProcess(processName)
+    flag = {"flag":True}
+    return json.dumps(flag, ensure_ascii=False)
+
 @app.route('/stop',methods=['GET'])
 @cross_origin()
 def stopProcess():
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
-    flag = Node[hostName].connection.supervisor.stopProcess(processName)
-    if flag:
-        return "True"
-    else:
-        return "Fales"
-  
+    Node[hostName].connection.supervisor.stopProcess(processName) 
 
 @app.route('/login',methods=['POST'])
 def login():
     pass
 
 if __name__ == "__main__":
-    socket.setdefaulttimeout(5) # 设置默认的超时时间为10秒
+    socket.setdefaulttimeout(5) # 设置默认的超时时间为5秒
     link()
     app.run()
