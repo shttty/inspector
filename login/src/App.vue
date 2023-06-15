@@ -1,14 +1,21 @@
 <template>
-  <div class="app">
-  <n-config-provider :theme-overrides="themeOverrides" >
-    <n-el tag="span" style="color: aqua;">
-    <n-card title="login" hoverable size="huge" justify-content="center"
+  <div style="height: 100px;"></div>
+  <n-grid :x-gap="50" :cols="3" >
+    <n-grid-item :offset="1">
+    <n-card  hoverable size="huge" justify-content="center"
   align-items="center">
-      卡片内容
+      <h1 align="center">Login</h1>
+      <n-space vertical size="large" style=";">
+      <n-input size="large" v-model:value="username" placeholder="Username" />
+      <n-input size="large" v-model:value="password" placeholder="Password" />
+      <div style="padding-left: 42%;"><n-button size="large"  @click="login">登录</n-button> </div>  
+      <n-alert v-if="loginFlag" type="warning">
+      用户名或密码错误
+      </n-alert>
+    </n-space>
     </n-card>
-    </n-el>
-  <n-global-style />
- </n-config-provider></div>
+    </n-grid-item>
+  </n-grid>
 </template>
 
 <script lang="ts" setup>
@@ -16,20 +23,13 @@ import { ref } from 'vue';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
 
-import { NConfigProvider,type GlobalThemeOverrides } from 'naive-ui'
-const themeOverrides: GlobalThemeOverrides = {
-    common: {
-      primaryColor: '#6260BD',
-      baseColor: '#6260BD',
-    },
-    Button: {
-      textColor: '#FF0000'
-    }
-  }
+
 
 const username = ref('');
 const password = ref('');
+const loginFlag = ref(false);
 
+const url = "http://localhost:5000/";
 
 function enhance(token: string) {
   console.log(CryptoJS.SHA512(token).toString());
@@ -40,7 +40,7 @@ async function login() {
   try {
     const passwordEnhanced = enhance(password.value);
     
-    const response = await fetch('/api/login', {
+    const response = await fetch(`${url}login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ async function login() {
       console.log(token);
       Cookies.set('userName', username.value);
       Cookies.set('userToken', token);
-      const responseSuccess = await fetch('/api/login/success', {
+      const responseSuccess = await fetch(`${url}login/success`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ async function login() {
       const dataSuccess = await responseSuccess.json();
       if (dataSuccess.flag) {
         console.log("Token 已被接受");
-        const responseCheck = await fetch('/api/login/check', {
+        const responseCheck = await fetch(`${url}login/check`, {
           method: 'get' 
         });
         const dataCheck = await responseCheck.json();
@@ -84,6 +84,7 @@ async function login() {
         
       }
     } else {
+      loginFlag.value = true;
       console.log("用户名或密码错误");
     }
   } catch (error) {
@@ -95,14 +96,7 @@ async function login() {
 <style scoped>
 
 .n-card{
-  width: 500px; 
-  height: 300px;
-  position: absolute;
-	top: 10%;
-	left: 37%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  height: 400px;
+} 
 </style>
 
