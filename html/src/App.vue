@@ -7,31 +7,30 @@
       <el-aside width="200px">
         <h1 style="text-align: center;">服务器列表</h1>
         <div>
-          <el-scrollbar max-height="600px">
+          <n-scrollbar max-height="600px">
             <el-row v-for="server in serverListOK" :key="server.id" justify="center"><el-link :underline="false"
                 type="primary">{{ server.hostName }}</el-link></el-row>
             <el-row v-for="server in serverListNO" :key="server.id" justify="center"><el-link :underline="false"
                 type="danger" disabled>{{ server.hostName }}</el-link></el-row>
-          </el-scrollbar>
+          </n-scrollbar>
         </div>
       </el-aside>
       <el-container>
         <el-main v-loading="loadFlag" element-loading-text="加载中" style="width: 100%">
           <div style="padding: 20px">
-            <el-space wrap>
-              <el-card v-for="server in serverListOK" :key="server.id" class="box-card" shadow="hover">
-                <template #header>
+            <n-space>
+              <n-card v-for="server in serverListOK" :key="server.id" class="box-card" hoverable>
                   <div class="card-header">
                     <el-text class="mx-1" style="font-size: 24px">{{ server.hostName }}</el-text>
                   </div>
-                </template>
-                <el-scrollbar>
+                  <n-divider />
+                <n-scrollbar style="max-height: 170px; width: 100%;" trigger="none" x-scrollable>
                   <div v-for="runningProcess in processListRunning" :key="runningProcess.id">
                     <el-row v-if="runningProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="success">{{ runningProcess.processName
-                      }}</el-link> </el-col>
-                      <el-col :span="6"> <span style="font-size: 16px; color: grey;">{{ runningProcess.processState
-                      }}</span> <br><span style="font-size: 10px; color: grey;">{{ runningProcess.uptime }}</span></el-col>
+                      <el-col :span="8"><el-text type="success">{{ runningProcess.processName
+                      }}</el-text> </el-col>
+                      <el-col :span="6"> <el-text type="info">{{ runningProcess.processState
+                      }}</el-text> <br><span style="font-size: 10px; color: grey;">{{ runningProcess.uptime }}</span></el-col>
                       <el-col :span="6"><el-button size="small" type='danger' text='danger' style="font-size: 18px"
                           @click="stopClick(runningProcess)">stop</el-button></el-col>
                       <el-col :span="3"><el-button type='info' text='info' size="small" style="font-size: 18px"
@@ -41,11 +40,8 @@
                         <template #header-extra>
                           <h2>{{ runningProcess.processName }}</h2>
                         </template>
-                        <n-scrollbar style="max-height: 500px" trigger="none">
-                          <log
-                              :log="runningProcess.log"
-                              @require-more="logClick(runningProcess)"
-                          />
+                        <n-scrollbar style="max-height: 500px" trigger="none" x-scrollable>
+                            <pre>{{ runningProcess.log }}</pre>
                         </n-scrollbar>
                         <template #footer>
                           <n-space justify="end">
@@ -59,10 +55,10 @@
                   </div>
                   <div v-for="startingProcess in processListStarting" :key="startingProcess.id">
                     <el-row v-if="startingProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="warning">{{ startingProcess.processName
-                      }}</el-link> </el-col>
-                      <el-col :span="6"> <span style="font-size: 16px; color: grey;">{{ startingProcess.processState
-                      }}</span> <br> <span style="font-size: 10px; color: grey;">{{ startingProcess.starttime }}</span></el-col>
+                      <el-col :span="8"><el-text type="warning">{{ startingProcess.processName
+                      }}</el-text></el-col>
+                      <el-col :span="6"> <el-text type="info">{{ startingProcess.processState
+                      }}</el-text> <br><el-text type="info" style="font-size: 10px;">{{ startingProcess.starttime }}</el-text></el-col>
                       <el-col :span="6"><el-button size="small" type='danger' text='danger' style="font-size: 18px"
                           @click="stopClick(startingProcess)">stop</el-button></el-col>
                       <el-col :span="3"><el-button type='info' text='info' size="small" style="font-size: 18px"
@@ -72,11 +68,8 @@
                         <template #header-extra>
                           <h2>{{ startingProcess.processName }}</h2>
                         </template>
-                        <n-scrollbar style="max-height: 500px" trigger="none" >
-                          <n-log
-                            :log="startingProcess.log "
-                            @require-more="logClick(startingProcess)"
-                          />                          
+                        <n-scrollbar style="max-height: 500px" trigger="none" x-scrollable>
+                            <pre>{{ startingProcess.log }}</pre>
                         </n-scrollbar>
                         <template #footer>
                           <n-space justify="end">
@@ -90,11 +83,10 @@
                   </div>
                   <div v-for="stoppedProcess in processListStopped" :key="stoppedProcess.id">
                     <el-row v-if="stoppedProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="danger">{{ stoppedProcess.processName
-                      }}</el-link></el-col>
-                      <el-col :span="6"> <span style="font-size: 18px; color: grey;">{{ stoppedProcess.processState
-                      }}</span><br><span style="font-size: 10px; color: grey;">{{
-  stoppedProcess.stoptime }}</span> </el-col>
+                      <el-col :span="8"><el-text type="danger">{{ stoppedProcess.processName
+                      }}</el-text></el-col>
+                      <el-col :span="6"> <el-text type="info">{{ stoppedProcess.processState
+                      }}</el-text><br><el-text type="info" style="font-size: 10px;">{{stoppedProcess.stoptime }}</el-text> </el-col>
                       <el-col :span="6"><el-button type='primary' text='primary' size="small" style="font-size: 18px"
                           @click="startClick(stoppedProcess)">start</el-button></el-col>
                       <el-col :span="3"><el-button type='info' text='info' size="small" style="font-size: 18px"
@@ -104,11 +96,8 @@
                         <template #header-extra>
                           <h2>{{ stoppedProcess.processName }}</h2>
                         </template>
-                        <n-scrollbar style="max-height: 500px" trigger="none" >
-                          <n-log
-                            :log="stoppedProcess.log"
-                            @require-more="logClick(stoppedProcess)"
-                          />
+                        <n-scrollbar style="max-height: 500px" trigger="none" x-scrollable>
+                            <pre>{{ stoppedProcess.log }}</pre>
                         </n-scrollbar>
                         <template #footer>
                           <n-space justify="end">
@@ -120,9 +109,9 @@
                       </n-modal>
                     </el-row>
                   </div>
-                </el-scrollbar>
-              </el-card>
-            </el-space>
+                </n-scrollbar>
+              </n-card>
+            </n-space>
           </div>
         </el-main>
       </el-container>
@@ -131,20 +120,6 @@
 </template>
 
 <style scoped>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
 .box-card {
   width: 550px;
   height: 300px;
@@ -166,7 +141,10 @@
 }
 
 .el-link {
-  font-size: 22px;
+  font-size: 18px;
+}
+.el-text {
+  font-size: 18px;
 }
 
 .el-link .el-icon--right.el-icon {
@@ -185,7 +163,7 @@
 
 import { ref, onMounted } from 'vue';
 
-const url = `http://localhost:5000`;
+const url = `/api`;
 interface ServerList {
   AllNodes: any;
   ConnecctSucceed: string[];
@@ -240,19 +218,17 @@ const processListStarting = ref<{ id: number; hostName: string; starttime: strin
 const processListStopped = ref<{ id: number; hostName: string; stoptime: string; processName: string; processState: string; showLog: boolean; log: string }[]>([]);
 const loadFlag = ref(true);
 
-const startClick = (item: { hostName: string, processName: string }) => {  
+const startClick = async (item: { hostName: string, processName: string }) => {
   const url2 = `${url}/start?servername=${item.hostName}&processname=${item.processName}`;
-  Promise.all([
-    fetch(url2),
-    setTimeout(() => load(), 100),
-  ])
-    .then(([response, , ]) => response.json())
-    .then(() => {
-      location.reload();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  try {
+    await Promise.all([
+      fetch(url2),
+      setTimeout(() => load(), 100),
+    ]);
+    setTimeout(() => load(),200);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const stopClick =  (item: { hostName: string, processName: string }) => {
@@ -268,6 +244,8 @@ const logClick = async (item: { hostName: string, processName: string, showLog: 
     .then((response) => response.json())
     .then((data: logText) => {
       item.log = data.text;
+      console.log(data);
+      console.log(item.log);
       item.showLog = true;
     })
 };
@@ -295,12 +273,12 @@ async function getProcessList() {
     .then(response => response.json())
     .then((data: Servers) => {
       let id = 0;
-      console.log(data);
       const serverNames = Object.keys(data);
-      console.log(serverNames);
-      console.log(serverNames[0]);
-      for (let i in serverNames) {
+      for (let i in serverNames) { 
         for (let a in data[serverNames[i]]) {
+          if (data[serverNames[i]][a].name !=  data[serverNames[i]][a].group) {
+            data[serverNames[i]][a].name = `${data[serverNames[i]][a].group}:${data[serverNames[i]][a].name}`             
+          }
           if (data[serverNames[i]][a].state == 20) {
             processListRunning.value.push({ id: id++, hostName: serverNames[i], uptime: convertTime(data[serverNames[i]][a].start), processName: data[serverNames[i]][a].name, processState: data[serverNames[i]][a].statename, showLog: false, log: " " });
             console.log(a)
