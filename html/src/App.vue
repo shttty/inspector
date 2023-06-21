@@ -1,7 +1,11 @@
 <template>
   <el-container class="layout-container-demo" style="height: 100%">
-    <el-header style="text-align: center; font-size: 12px">
-      <h1>进程管理中心</h1>
+    <el-header>
+      <n-space justify="space-between">
+        <div></div>
+        <h1 style="margin: 0; padding-top: 10px;">进程管理中心</h1>
+        <div style="padding-top: 10px;" @click="logout"><n-button>退出</n-button></div>
+      </n-space>
     </el-header>
     <el-container>
       <el-aside width="200px">
@@ -162,6 +166,7 @@
 <script lang="ts" setup >
 
 import { ref, onMounted } from 'vue';
+import Cookies from 'js-cookie';
 
 const url = `/api`;
 interface ServerList {
@@ -225,7 +230,7 @@ const startClick = async (item: { hostName: string, processName: string }) => {
       fetch(url2),
       setTimeout(() => load(), 100),
     ]);
-    setTimeout(() => load(),200);
+    setTimeout(() => load(), 100)
   } catch (error) {
     console.error(error);
   }
@@ -274,7 +279,7 @@ async function getProcessList() {
     .then((data: Servers) => {
       let id = 0;
       const serverNames = Object.keys(data);
-      for (let i in serverNames) { 
+      for (let i in serverNames) {
         for (let a in data[serverNames[i]]) {
           if (data[serverNames[i]][a].name !=  data[serverNames[i]][a].group) {
             data[serverNames[i]][a].name = `${data[serverNames[i]][a].group}:${data[serverNames[i]][a].name}`             
@@ -306,6 +311,13 @@ async function load() {
   await getServerList()
   await getProcessList()
 }
+
+function logout() {
+  Cookies.remove('userToken');
+  Cookies.remove('userName');
+  location.reload();
+}
+
 onMounted(() => {
   load()
 });

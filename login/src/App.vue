@@ -7,7 +7,7 @@
       <h1 align="center">Login</h1>
       <n-space vertical size="large" style=";">
       <n-input size="large" v-model:value="username" placeholder="Username" />
-      <n-input size="large" v-model:value="password" placeholder="Password" />
+      <n-input type="password" show-password-on="mousedown" size="large" v-model:value="password" placeholder="Password" />
       <div style="padding-left: 42%;"><n-button size="large"  @click="login">登录</n-button> </div>  
       <n-alert v-if="loginFlag" type="warning">
       用户名或密码错误
@@ -29,7 +29,7 @@ const username = ref('');
 const password = ref('');
 const loginFlag = ref(false);
 
-const url = "http://localhost:5000/";
+const url = "/api";
 
 function enhance(token: string) {
   console.log(CryptoJS.SHA512(token).toString());
@@ -39,8 +39,7 @@ function enhance(token: string) {
 async function login() {
   try {
     const passwordEnhanced = enhance(password.value);
-    
-    const response = await fetch(`${url}login`, {
+    const response = await fetch(`${url}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -57,7 +56,7 @@ async function login() {
       console.log(token);
       Cookies.set('userName', username.value);
       Cookies.set('userToken', token);
-      const responseSuccess = await fetch(`${url}login/success`, {
+      const responseSuccess = await fetch(`${url}/login/success`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,18 +69,14 @@ async function login() {
       const dataSuccess = await responseSuccess.json();
       if (dataSuccess.flag) {
         console.log("Token 已被接受");
-        const responseCheck = await fetch(`${url}login/check`, {
+        const responseCheck = await fetch(`${url}/login/check`, {
           method: 'get' 
         });
         const dataCheck = await responseCheck.json();
         if (dataCheck.flag) {
           console.log("Token 正常");
-          const currentDomain = window.location.protocol + '//' + window.location.hostname;
-          const newUri = '/';
-          const newUrl = currentDomain + newUri;
-          window.location.replace(newUrl);
+          window.location.replace("../");
         }
-        
       }
     } else {
       loginFlag.value = true;
@@ -94,7 +89,6 @@ async function login() {
 </script>
 
 <style scoped>
-
 .n-card{
   height: 400px;
 } 
