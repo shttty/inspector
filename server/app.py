@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+import os
 from User import readUser
 from nodeLink import *
 import json
 from flask import Flask, jsonify, request, session
-import json
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -18,8 +18,7 @@ app.config.from_object(Config())
 @app.route('/serverList', methods=['GET']) #显示对应用户的服务器列表及连接测试状态
 def serverList():
     print("username:",request.cookies.get("userName"))
-    global Node
-    nodeConnected,nodeConnectFailed,Node = link(request.cookies.get("userName")) #获得用户连接的服务器列表及服务器状态
+    nodeConnected,nodeConnectFailed,_ = link(request.cookies.get("userName")) #获得用户连接的服务器列表及服务器状态
     print(nodeConnected,"connected",nodeConnectFailed,"failed")
     servers={"ConnecctSucceed":nodeConnected,"ConnectFailled":nodeConnectFailed}
     response = jsonify(servers)
@@ -27,6 +26,7 @@ def serverList():
 
 @app.route('/processList/all/',methods=['GET'])
 def processList():
+    _,_,Node = link(request.cookies.get("userName"))
     result={}
     for i in Node:
         result[i]=Node[i].listProcess()
@@ -34,6 +34,7 @@ def processList():
 
 @app.route('/log',methods=['GET']) #获取某个服务器的某个进程的stdout日志，暂时没有获取stderr日志的功能
 def processLog():
+    _,_,Node = link(request.cookies.get("userName"))
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     log=Node[hostName].connection.supervisor.tailProcessStdoutLog(processName,0,10000) #日志最大10000个字符，计划以后由用户指定，
@@ -43,6 +44,7 @@ def processLog():
 
 @app.route('/start',methods=['GET'])  #启动一个进程
 def startProcess():
+    _,_,Node = link(request.cookies.get("userName"))
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     Node[hostName].connection.supervisor.startProcess(processName)
@@ -51,6 +53,7 @@ def startProcess():
 
 @app.route('/stop',methods=['GET']) #停止一个进程
 def stopProcess():
+    _,_,Node = link(request.cookies.get("userName"))
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     Node[hostName].connection.supervisor.stopProcess(processName) 
@@ -111,5 +114,37 @@ def auth():
             return "",401 #用户无权限
     except:
         return "",401 #cookie/session为空
-if __name__ == "__main__":  
-    app.run(debug=True)
+    
+@app.route('/logout')
+def logout():
+    session.pop(request.cookies.get('userName'))
+    return "",200
+##############################临时措施
+@app.route('/getFiles', methods=['GET']) #从服务器拷贝文件夹
+def getFiles():
+    os.system('/usr/bin/bash /root/inspector/getFile_S.sh')
+###############################
+@app.route('/tree', methods=['GET'])
+def outputTree():
+    hostName = request.args.get("server")
+    _,_,Node = link(request.cookies.get("userName"))
+    progress = request.args.get("progress")
+    print(hostName)
+    print(progress)
+    #return "ok"
+    path=os.path.dirname(os.path.dirname(Node[hostName].connection.supervisor.getProcessInfo(progress).get("stdout_logfile")))
+    print(path)
+    result = json.dumps(Node[hostName].connection.inspector_files.tree(path), ensure_ascii=False)
+    return result
+
+@app.route('/download', methods=['POST'])
+def download():
+    path = request.json.get("path")
+    hostName = request.json.get("server")
+    _,_,Node = link(request.cookies.get("userName"))
+    print(path)
+    print(request.cookies.get("userName"))
+    result = json.dumps(Node[hostName].connection.inspector_files.rsync(path, request.cookies.get("userName")), ensure_ascii=False)
+    return result
+if __name__ == "__main__":
+    app.run(debug=True,port=5000)
