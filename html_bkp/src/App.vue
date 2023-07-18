@@ -31,8 +31,8 @@
                 <n-scrollbar style="max-height: 170px; width: 100%;" trigger="none" x-scrollable>
                   <div v-for="runningProcess in processListRunning" :key="runningProcess.id">
                     <el-row v-if="runningProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="success" @click="getFiles( server.hostName, runningProcess.processName)" >{{ runningProcess.processName
-                      }}</el-link></el-col>
+                      <el-col :span="8"><el-text type="success">{{ runningProcess.processName
+                      }}</el-text> </el-col>
                       <el-col :span="6"> <el-text type="info">{{ runningProcess.processState
                       }}</el-text> <br><span style="font-size: 10px; color: grey;">{{ runningProcess.uptime }}</span></el-col>
                       <el-col :span="6"><el-button size="small" type='danger' text='danger' style="font-size: 18px"
@@ -59,8 +59,8 @@
                   </div>
                   <div v-for="startingProcess in processListStarting" :key="startingProcess.id">
                     <el-row v-if="startingProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="warning" @click="getFiles(server.hostName, startingProcess.processName)">{{ startingProcess.processName
-                      }}</el-link></el-col>
+                      <el-col :span="8"><el-text type="warning">{{ startingProcess.processName
+                      }}</el-text></el-col>
                       <el-col :span="6"> <el-text type="info">{{ startingProcess.processState
                       }}</el-text> <br><el-text type="info" style="font-size: 10px;">{{ startingProcess.starttime }}</el-text></el-col>
                       <el-col :span="6"><el-button size="small" type='danger' text='danger' style="font-size: 18px"
@@ -87,8 +87,8 @@
                   </div>
                   <div v-for="stoppedProcess in processListStopped" :key="stoppedProcess.id">
                     <el-row v-if="stoppedProcess.hostName == server.hostName">
-                      <el-col :span="8"><el-link :underline="false" type="danger" @click="getFiles(server.hostName, stoppedProcess.processName)" >{{ stoppedProcess.processName
-                      }}</el-link></el-col>
+                      <el-col :span="8"><el-text type="danger">{{ stoppedProcess.processName
+                      }}</el-text></el-col>
                       <el-col :span="6"> <el-text type="info">{{ stoppedProcess.processState
                       }}</el-text><br><el-text type="info" style="font-size: 10px;">{{stoppedProcess.stoptime }}</el-text> </el-col>
                       <el-col :span="6"><el-button type='primary' text='primary' size="small" style="font-size: 18px"
@@ -168,11 +168,7 @@
 import { ref, onMounted } from 'vue';
 import Cookies from 'js-cookie';
 
-
 const url = `/api`;
-const urlfile = `/files`;
-// const url3 = `http://localhost:5001`;
-
 interface ServerList {
   AllNodes: any;
   ConnecctSucceed: string[];
@@ -322,11 +318,6 @@ function logout() {
   location.reload();
 }
 
-function getFiles(hostName: string, process: string) {
-  console.log(hostName)
-  console.log(process)
-  window.open(`${urlfile}?hostName=${hostName}&process=${process}`, 'filesTransfer', 'width=800,height=600');
-}
 onMounted(() => {
   load()
 });
