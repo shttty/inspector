@@ -108,3 +108,10 @@ def link(user="admin") :
                 print(hostName, address, "无法连接")
                 linkFiailed.append(hostName)
     return linkSuccessed,linkFiailed,Node
+
+def list(nodeName):
+    with open("server_list/server_list.json",'r') as f: # 从json配置文件读取服务器列表
+        nodeList=json.load(f)
+    connect=ServerProxy(f"http://{nodeList[nodeName]}/RPC2")
+    return connect.supervisor.getAllProcessInfo()
+

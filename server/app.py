@@ -17,24 +17,30 @@ app.config.from_object(Config())
 
 @app.route('/serverList', methods=['GET']) #显示对应用户的服务器列表及连接测试状态
 def serverList():
-    print("username:",request.cookies.get("userName"))
-    nodeConnected,nodeConnectFailed,_ = link(request.cookies.get("userName")) #获得用户连接的服务器列表及服务器状态
+    # print("username:",request.cookies.get("userName"))
+    # nodeConnected,nodeConnectFailed,_ = link(request.cookies.get("userName")) #获得用户连接的服务器列表及服务器状态
+    nodeConnected,nodeConnectFailed,_ = link("admin")
     print(nodeConnected,"connected",nodeConnectFailed,"failed")
     servers={"ConnecctSucceed":nodeConnected,"ConnectFailled":nodeConnectFailed}
     response = jsonify(servers)
     return response
 
-@app.route('/processList/all/',methods=['GET'])
+@app.route('/processList',methods=['GET'])
 def processList():
-    _,_,Node = link(request.cookies.get("userName"))
-    result={}
-    for i in Node:
-        result[i]=Node[i].listProcess()
-    return json.dumps(result, ensure_ascii=False)
+    # _,_,Node = link(request.cookies.get("userName"))
+    if request.args.get("servername") == all:
+        _,_,Node = link("admin")
+        result={}
+        for i in Node:
+            result[i]=Node[i].listProcess()
+        return json.dumps(result, ensure_ascii=False)
+    else:
+        return json.dumps(list(request.args.get("servername")), ensure_ascii=False)
 
 @app.route('/log',methods=['GET']) #获取某个服务器的某个进程的stdout日志，暂时没有获取stderr日志的功能
 def processLog():
-    _,_,Node = link(request.cookies.get("userName"))
+    # _,_,Node = link(request.cookies.get("userName"))
+    _,_,Node = link("admin")
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     log=Node[hostName].connection.supervisor.tailProcessStdoutLog(processName,0,10000) #日志最大10000个字符，计划以后由用户指定，
@@ -44,7 +50,8 @@ def processLog():
 
 @app.route('/start',methods=['GET'])  #启动一个进程
 def startProcess():
-    _,_,Node = link(request.cookies.get("userName"))
+    # _,_,Node = link(request.cookies.get("userName"))
+    _,_,Node = link("admin")
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     Node[hostName].connection.supervisor.startProcess(processName)
@@ -53,7 +60,8 @@ def startProcess():
 
 @app.route('/stop',methods=['GET']) #停止一个进程
 def stopProcess():
-    _,_,Node = link(request.cookies.get("userName"))
+    # _,_,Node = link(request.cookies.get("userName"))
+    _,_,Node = link("admin")
     hostName = request.args.get("servername")
     processName = request.args.get("processname")
     Node[hostName].connection.supervisor.stopProcess(processName) 
@@ -127,7 +135,8 @@ def getFiles():
 @app.route('/tree', methods=['GET'])
 def outputTree():
     hostName = request.args.get("server")
-    _,_,Node = link(request.cookies.get("userName"))
+    # _,_,Node = link(request.cookies.get("userName"))
+    _,_,Node = link("admin")
     progress = request.args.get("progress")
     print(hostName)
     print(progress)
@@ -141,10 +150,11 @@ def outputTree():
 def download():
     path = request.json.get("path")
     hostName = request.json.get("server")
-    _,_,Node = link(request.cookies.get("userName"))
+    # _,_,Node = link(request.cookies.get("userName"))
+    _,_,Node = link("admin")
     print(path)
     print(request.cookies.get("userName"))
-    result = json.dumps(Node[hostName].connection.inspector_files.rsync(path, request.cookies.get("userName")), ensure_ascii=False)
+    result = json.dumps(Node[hostName].connection.tree().rsync(path, request.cookies.get("userName")), ensure_ascii=False)
     return result
 if __name__ == "__main__":
     app.run(debug=True,port=5000)

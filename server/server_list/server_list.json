@@ -1,3 +1,4 @@
 {
-    "localhost":"localhost:9001"
+    "localhost":"localhost:9001",
+    "localhost2":"localhost:9001"
 }
