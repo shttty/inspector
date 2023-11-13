@@ -1,10 +1,4 @@
-import multiprocessing
-
-bind = '0.0.0.0:5000'
-
-worker_class = "gevent"
-daemon = False
-debug = True
-proc_name = 'gunicorn'
-pidfile = './log/gunicorn.pid'
-errorlog = './log/gunicorn.log'
+# 日志配置
+loglevel = "debug"
+workers = 4
+bind = "0.0.0.0:8080"
