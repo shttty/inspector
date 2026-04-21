@@ -1,0 +1,56 @@
+# Inspector LDAP Configuration
+#
+# Copy to backend/app/ldap.yml and fill in values.
+# Passwords support ${ENV_VAR} syntax.
+#
+# Auth flow (same as Grafana/GitLab/Jenkins):
+#   service-account bind -> search user DN -> user DN + password rebind
+#
+# Config can also be managed via the web UI (stored in DB).
+# DB entries override file entries with the same name.
+
+servers:
+  - name: wequant
+    host: "10.1.2.5"
+    port: 389
+    use_ssl: false
+
+    # Service account for searching users
+    bind_dn: "CN=svc-inspector,OU=Service Accounts,DC=wequant,DC=com"
+    bind_password: "${LDAP_BIND_PASSWORD_WEQUANT}"
+
+    # User search
+    user_search_base: "DC=wequant,DC=com"
+    user_search_filter: "(sAMAccountName={username})"
+
+    # Attribute mapping
+    attributes:
+      username: sAMAccountName
+      display_name: cn
+      email: mail
+
+    # Group -> role mapping (reads memberOf attribute)
+    role_mapping:
+      admin: "CN=Inspector-Admins,OU=Groups,DC=wequant,DC=com"
+      on_duty: "CN=Inspector-OnDuty,OU=Groups,DC=wequant,DC=com"
+
+    domains:
+      - wequant
+
+  - name: strategy
+    host: "10.1.6.3"
+    port: 389
+    use_ssl: false
+    bind_dn: "CN=svc-inspector,OU=Service Accounts,DC=strategy,DC=com"
+    bind_password: "${LDAP_BIND_PASSWORD_STRATEGY}"
+    user_search_base: "DC=strategy,DC=com"
+    user_search_filter: "(sAMAccountName={username})"
+    attributes:
+      username: sAMAccountName
+      display_name: cn
+      email: mail
+    # role_mapping:
+    #   admin: "CN=Inspector-Admins,OU=Groups,DC=strategy,DC=com"
+    #   on_duty: "CN=Inspector-OnDuty,OU=Groups,DC=strategy,DC=com"
+    domains:
+      - strategy
