@@ -1,0 +1,8 @@
+Flask
+ldap3==2.9.1
+mysql-connector-python==8.1.0
+pycryptodomex==3.19.0
+Werkzeug==2.2.3
+gunicorn==20.1.0
+pycryptodome==3.19.0
+PyYAML==6.0.1
